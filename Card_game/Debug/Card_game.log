@@ -1,8 +1,8 @@
 ﻿  Core.cpp
-c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(702): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(748): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(794): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(840): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(886): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(938): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(932): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\weiss\documents\visual studio 2017\projects\card_game\card_game\classes.h(984): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Card_game.vcxproj -> C:\Users\Weiss\documents\visual studio 2017\Projects\Card_game\Debug\Card_game.exe

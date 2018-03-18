@@ -6,6 +6,9 @@
 #include <string>
 #include <map>
 #include <math.h>
+#include <thread>
+#include <conio.h>
+#include <windows.h>
 
 using namespace std;
 class menu;
@@ -191,6 +194,10 @@ public:
 	int hp;
 	int deck_size;
 	int move_points;
+	bool board_flag = false;
+	bool cls_flag = false;
+	bool drawer_finish_flag = false;
+	thread drawer;
 	map <int, Card*> Deck;
 	string number;
 	string summoned_card_name;
@@ -201,13 +208,18 @@ public:
 		this->hp = 500;
 		this->deck_size = 0;
 	}
-	void display_deck(player obj2) {
+	void sig() {
+		cls_flag = true;
+		Sleep(100);
+		cls_flag = false;
+	}
+	void display_deck(player &obj2) {
 		system("cls");
 		int iterator = 1;
 		int it = -5;
 		int size = 4;
 		int max_hp = 0;
-		bool flag = false;;
+		bool flag = false;
 		cout << "-----------------------------------------------------------------------------------------------------------------------" << endl;
 		cout << "YOUR DECK                                                                                                    ENEMY DECK" << endl;
 		cout << "-----------------------------------------------------------------------------------------------------------------------" << endl;
@@ -407,6 +419,9 @@ public:
 		cin >> action;
 		if (action == 'y') {
 			this->move_points_restore();
+			this->drawer_finish_flag = true;
+			if (this->board_flag) this->board_flag = false;
+			this->drawer.join();
 			obj1.switch_turn();
 		}
 		else if (action == 'n') {
@@ -418,10 +433,29 @@ public:
 			this->end_turn(obj1, obj2, obj3);
 		}
 	}
-
+	void callback_function(player &obj2) {
+		while (1) {
+			if (this->cls_flag) {
+				system("cls");
+				Sleep(300);
+				this->display_deck(obj2);
+				Sleep(1000);
+			}
+			if (this->drawer_finish_flag) {
+				this->drawer_finish_flag = false;
+				break;
+			}
+		}
+	}
 	void summon_card(turn &obj1, player &obj2, player &obj3) {
 		string anykey;
 		system("cls");
+
+		if (!this->board_flag) {
+			this->drawer = thread(&player::callback_function, this, std::ref(obj2));
+			this->board_flag = true;
+		}
+
 		if (this->move_points > 0) {
 			string kind;
 			cout << "what kind of card do you want to summon?" << endl;
@@ -430,7 +464,7 @@ public:
 			cout << "3. mage - can't fight very well but cassts powerful curses on enemy cards" << endl;
 			cout << "4. priest - previous' opposite, can heal allies and remove curses" << endl;
 			cout << "5. assassin - very delicate but deadly unit that can heavily damage it's opponent even if his card blocks it's attack, can fade and become untargetable" << endl;
-			cout << "6. bard - a tricki fihjter that can make your enemies fight for you!" << endl;
+			cout << "6. bard - a tricky fihgter that can make your enemies fight for you!" << endl;
 			cin >> kind;
 			if (kind == "archer" && Archer::mana_cost <= this->mana || kind == "2" && Archer::mana_cost <= this->mana) {
 				system("cls");
@@ -440,7 +474,9 @@ public:
 				this->number = to_string(this->deck_size);
 				Deck[deck_size] = new Archer(this->id, this->deck_size);
 				this->move_points -= 1;
-				this->display_deck(obj2);
+				//this->display_deck(obj2);
+				this->sig();
+				Sleep(500);
 				this->choose_action(obj1, obj2, obj3);
 			}
 			else if (kind == "warrior" && Warrior::mana_cost <= this->mana || kind == "1" && Warrior::mana_cost <= this->mana) {
@@ -451,7 +487,9 @@ public:
 				this->number = to_string(this->deck_size);
 				Deck[deck_size] = new Warrior(this->id, this->deck_size);
 				this->move_points -= 1;
-				this->display_deck(obj2);
+				//this->display_deck(obj2);
+				Sleep(500);
+				this->sig();
 				this->choose_action(obj1, obj2, obj3);
 			}
 			else if (kind == "mage" && Mage::mana_cost <= this->mana || kind == "3" && Mage::mana_cost <= this->mana) {
@@ -463,7 +501,9 @@ public:
 					this->number = to_string(this->deck_size);
 					Deck[deck_size] = new Mage(this->id, this->deck_size);
 					this->move_points -= 2;
-					this->display_deck(obj2);
+					//this->display_deck(obj2);
+					Sleep(500);
+					this->sig();
 					this->choose_action(obj1, obj2, obj3);
 				}
 				else {
@@ -483,7 +523,9 @@ public:
 					this->number = to_string(this->deck_size);
 					Deck[deck_size] = new Assassin(this->id, this->deck_size);
 					this->move_points -= 2;
-					this->display_deck(obj2);
+					//this->display_deck(obj2);
+					Sleep(500);
+					this->sig();
 					this->choose_action(obj1, obj2, obj3);
 				}
 				else {
@@ -502,7 +544,9 @@ public:
 				this->number = to_string(this->deck_size);
 				Deck[deck_size] = new Priest(this->id, this->deck_size);
 				this->move_points -= 1;
-				this->display_deck(obj2);
+				//this->display_deck(obj2);
+				Sleep(500);
+				this->sig();
 				this->choose_action(obj1, obj2, obj3);
 			}
 			else if(kind == "bard" && Bard::mana_cost <= this->mana || kind == "6" && Bard::mana_cost <= this->mana) {
@@ -512,7 +556,9 @@ public:
 				this->number = to_string(this->deck_size);
 				Deck[deck_size] = new Bard(this->id, this->deck_size);
 				this->move_points -= 1;
-				this->display_deck(obj2);
+				//this->display_deck(obj2);
+				Sleep(500);
+				this->sig();
 				this->choose_action(obj1, obj2, obj3);
 			}
 			else {
@@ -1037,12 +1083,10 @@ void Bard::convert(player &obj1, player &obj2) {
 	cout << "insert card you want to convert: " << endl;
 	int card;
 	cin >> card;
-	int iterator = 0;
 	if (obj1.Deck[card] != NULL) {
 		if (obj1.Deck[card]->health > 0) {
 			if (obj1.Deck[card]->owner == 1) obj1.Deck[card]->owner = 2;
 			else if (obj1.Deck[card]->owner == 2) obj1.Deck[card]->owner = 1;
-			iterator++;
 			obj2.deck_size++;
 			obj1.deck_size--;
 			obj2.Deck[obj2.deck_size] = obj1.Deck[card];
@@ -1051,7 +1095,7 @@ void Bard::convert(player &obj1, player &obj2) {
 				obj1.Deck[card - 1] = obj1.Deck[card];
 				card++;
 			}
-			obj1.Deck[card] = NULL;
+			obj1.Deck[card-1] = NULL;
 		}
 		else {
 			char anykey;
@@ -1064,7 +1108,7 @@ void Bard::convert(player &obj1, player &obj2) {
 	else {
 		char anykey;
 		system("cls");
-		cout << "no suc card, press any key to continue: " << endl;
+		cout << "no such card, press any key to continue: " << endl;
 		cin >> anykey;
 		this->convert(obj1, obj2);
 	}
