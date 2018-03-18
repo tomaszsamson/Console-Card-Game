@@ -437,9 +437,9 @@ public:
 		while (1) {
 			if (this->cls_flag) {
 				system("cls");
-				Sleep(300);
+				Sleep(200);
 				this->display_deck(obj2);
-				Sleep(1000);
+				Sleep(400);
 			}
 			if (this->drawer_finish_flag) {
 				this->drawer_finish_flag = false;
@@ -451,10 +451,7 @@ public:
 		string anykey;
 		system("cls");
 
-		if (!this->board_flag) {
-			this->drawer = thread(&player::callback_function, this, std::ref(obj2));
-			this->board_flag = true;
-		}
+
 
 		if (this->move_points > 0) {
 			string kind;
@@ -488,8 +485,8 @@ public:
 				Deck[deck_size] = new Warrior(this->id, this->deck_size);
 				this->move_points -= 1;
 				//this->display_deck(obj2);
-				Sleep(500);
 				this->sig();
+				Sleep(500);
 				this->choose_action(obj1, obj2, obj3);
 			}
 			else if (kind == "mage" && Mage::mana_cost <= this->mana || kind == "3" && Mage::mana_cost <= this->mana) {
@@ -502,8 +499,8 @@ public:
 					Deck[deck_size] = new Mage(this->id, this->deck_size);
 					this->move_points -= 2;
 					//this->display_deck(obj2);
-					Sleep(500);
 					this->sig();
+					Sleep(500);
 					this->choose_action(obj1, obj2, obj3);
 				}
 				else {
@@ -524,8 +521,8 @@ public:
 					Deck[deck_size] = new Assassin(this->id, this->deck_size);
 					this->move_points -= 2;
 					//this->display_deck(obj2);
-					Sleep(500);
 					this->sig();
+					Sleep(500);
 					this->choose_action(obj1, obj2, obj3);
 				}
 				else {
@@ -545,8 +542,8 @@ public:
 				Deck[deck_size] = new Priest(this->id, this->deck_size);
 				this->move_points -= 1;
 				//this->display_deck(obj2);
-				Sleep(500);
 				this->sig();
+				Sleep(500);
 				this->choose_action(obj1, obj2, obj3);
 			}
 			else if(kind == "bard" && Bard::mana_cost <= this->mana || kind == "6" && Bard::mana_cost <= this->mana) {
@@ -557,8 +554,8 @@ public:
 				Deck[deck_size] = new Bard(this->id, this->deck_size);
 				this->move_points -= 1;
 				//this->display_deck(obj2);
-				Sleep(500);
 				this->sig();
+				Sleep(500);
 				this->choose_action(obj1, obj2, obj3);
 			}
 			else {
@@ -1115,7 +1112,13 @@ void Bard::convert(player &obj1, player &obj2) {
 }
 void player::choose_action(turn &obj1, player &obj2, player &obj3) {
 	if (this->isAlive()) {
+		if (!this->board_flag) {
+			this->drawer = thread(&player::callback_function, this, std::ref(obj2));
+			this->board_flag = true;
+		}
+		this->sig();
 		string action;
+		Sleep(400);
 		cout << "choose acttion" << endl << "1. summon card" << endl << "2. end turn" << endl << "3. show deck" << endl << "4. show card detail" << endl << "5. attack enemy card" << endl << "6. attack enemy" << endl << "7. use speial ability" << endl  << "8. upgrade warrior card" << endl;
 		cin >> action;
 		this->show_stats();
