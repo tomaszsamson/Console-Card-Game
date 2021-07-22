@@ -451,8 +451,6 @@ public:
 		string anykey;
 		system("cls");
 
-
-
 		if (this->move_points > 0) {
 			string kind;
 			cout << "what kind of card do you want to summon?" << endl;
@@ -573,6 +571,7 @@ public:
 			this->choose_action(obj1, obj2, obj3);
 		}
 	}
+	
 	void attack_enemy_card(turn &obj1, player &obj2, player &obj3) {
 		int select, select_enemy;
 		string anykey;
@@ -637,6 +636,7 @@ public:
 					this->special_ability(obj1, obj2, obj3);
 				}
 			}
+			
 			else if (choice == "e") {
 				cout << "choose card: " << endl;
 				cin >> select_target;
